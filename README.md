@@ -1,7 +1,7 @@
 freeablo-windows-build
 =======================
 
-This repository is forr people who want to build https://github.com/wheybags/freeablo on windows.
+This repository is for people who want to build https://github.com/wheybags/freeablo on windows.
 It is a bundle of the dependencies, and a script to tell cmake where to find them.
 
 Requirements
@@ -13,7 +13,7 @@ Visual studio 2010 - yes, actually needs to be 2010. You can install 2010 expres
 
 Usage
 =====
-Clone the main freeablo repo into this folder, and place DIABDAT.MPQ and Diablo.exe in here as well.
+Clone the main freeablo repo into this folder (don't forget git submodule update --init), and place DIABDAT.MPQ and Diablo.exe in here as well.
 Your directory structure should look like this:
 
 freeablo-windows-build/
@@ -32,4 +32,4 @@ freeablo-windows-build/
 
 |-template.vcxproj.user
 
-Now run cmake.bat by clicking, or in cmd.exe. This will create a build folder with a vs2010 solution inside.
+Now run cmake.bat by clicking, or in cmd.exe. This will create a new folder called build with a visual studio solution inside.
