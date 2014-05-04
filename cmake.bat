@@ -26,7 +26,11 @@ cd ..\deps\boost_1_54_0
 set BOOST_ROOT=%CD%
 cd %CURRDIR%
 
-cmake  -G "Visual Studio 10" ..\freeablo
+cd ..\windows-include\
+set WIN_INCLUDE=%CD%
+cd %CURRDIR%
+
+cmake  -G "Visual Studio 10" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE%
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
 cd ..
