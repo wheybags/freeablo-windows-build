@@ -46,10 +46,6 @@ cd ..\deps\boost_1_54_0
 set BOOST_ROOT=%CD%
 cd %CURRDIR%
 
-cd ..\deps\glew-1.10.0
-set GLEW_PATH=%CD%
-cd %CURRDIR%
-
 cd ..\deps\freetype-2.3.5-1
 set FREETYPE_DIR=%CD%
 cd %CURRDIR%
@@ -65,7 +61,7 @@ set PYTHON_DEBUG_LIBRARY=%CD%\libs\python27_d.lib
 cd %CURRDIR%
 
 
-cmake.exe  -G "Visual Studio 10" ..\freeablo -DGLEW_LIBRARY=%GLEW_PATH%\lib\glew32.lib -DGLEW_INCLUDE_DIR=%GLEW_PATH%\include\ -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY%
+cmake.exe  -G "Visual Studio 10" ..\freeablo -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY%
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
 cd ..
