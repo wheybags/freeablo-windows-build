@@ -7,6 +7,7 @@ mkdir build
 mkdir build\Debug
 copy deps\SDL2-2.0.3\lib\SDL2.dll build\Debug\
 copy deps\SDL2_image-2.0.0\lib\*.dll build\Debug\
+copy deps\SDL2_mixer-2.0.0\lib\*.dll build\Debug\
 copy deps\freetype-2.3.5-1\bin\freetype6.dll build\Debug\
 copy deps\Python27\python27_d.dll build\Debug\
 copy deps\libRocket\lib\RocketCore_d.dll build\Debug
@@ -17,6 +18,7 @@ copy deps\libRocket\lib\RocketControls_d.dll build\Debug
 mkdir build\Release
 copy deps\SDL2-2.0.3\lib\SDL2.dll build\Release\
 copy deps\SDL2_image-2.0.0\lib\*.dll build\Release\
+copy deps\SDL2_mixer-2.0.0\lib\*.dll build\Release\
 copy deps\freetype-2.3.5-1\bin\freetype6.dll build\Release\
 copy deps\Python27\python27.dll build\Release
 copy deps\libRocket\lib\RocketCore.dll build\Release
@@ -40,6 +42,10 @@ cd %CURRDIR%
 
 cd ..\deps\SDL2_image-2.0.0
 set SDL2IMAGEDIR=%CD%
+cd %CURRDIR%
+
+cd ..\deps\SDL2_mixer-2.0.0
+set SDL2MIXERDIR=%CD%
 cd %CURRDIR%
 
 cd ..\deps\boost_1_54_0
