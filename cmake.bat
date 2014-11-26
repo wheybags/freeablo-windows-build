@@ -1,3 +1,7 @@
+
+:http://stackoverflow.com/questions/3551888/pausing-a-batch-file-when-double-clicked-but-not-when-run-from-a-console-window
+for %%x in (%cmdcmdline%) do if /i "%%~x"=="/c" set DOUBLECLICKED=1
+
 IF NOT EXIST build\ GOTO NOBUILDFOLDER
     rmdir /s /q build\
 :NOBUILDFOLDER
@@ -76,3 +80,5 @@ cmake.exe  -G "Visual Studio 10" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -D
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
 cd ..
+
+if defined DOUBLECLICKED pause
