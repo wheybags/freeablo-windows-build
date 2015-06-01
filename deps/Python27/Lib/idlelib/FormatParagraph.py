@@ -44,9 +44,11 @@ class FormatParagraph:
 
         The length limit parameter is for testing with a known value.
         """
-        if limit == None:
+        if limit is None:
+            # The default length limit is that defined by pep8
             limit = idleConf.GetOption(
-                    'main', 'FormatParagraph', 'paragraph', type='int')
+                'extensions', 'FormatParagraph', 'max-width',
+                type='int', default=72)
         text = self.editwin.text
         first, last = self.editwin.get_selection_indices()
         if first and last:
@@ -188,7 +190,6 @@ def get_comment_header(line):
     return m.group(1)
 
 if __name__ == "__main__":
-    from test import support; support.use_resources = ['gui']
     import unittest
     unittest.main('idlelib.idle_test.test_formatparagraph',
             verbosity=2, exit=False)

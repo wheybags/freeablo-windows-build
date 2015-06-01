@@ -6,11 +6,11 @@ for %%x in (%cmdcmdline%) do if /i "%%~x"=="/c" set DOUBLECLICKED=1
 
 IF EXIST Qt GOTO QTINSTALLED
     echo downloading qt, this may take a while (~600mb installer)...
-    powershell -Command "(New-Object Net.WebClient).DownloadFile('http://download.qt.io/official_releases/qt/5.4/5.4.1/qt-opensource-windows-x86-msvc2010_opengl-5.4.1.exe', 'qt-opensource-windows-x86-msvc2010_opengl-5.4.1.exe')"
+    powershell -Command "(New-Object Net.WebClient).DownloadFile('http://download.qt.io/official_releases/qt/5.4/5.4.1/qt-opensource-windows-x86-msvc2013_opengl-5.4.1.exe', 'qt-opensource-windows-x86-msvc2013_opengl-5.4.1.exe')"
        
     echo executing qt installer, please select %CD%\Qt\Qt5.4.1\ as the installation directory
     pause
-    start /WAIT qt-opensource-windows-x86-msvc2010_opengl-5.4.1.exe
+    start /WAIT qt-opensource-windows-x86-msvc2013_opengl-5.4.1.exe
     
 :QTINSTALLED
 
@@ -30,12 +30,12 @@ copy deps\Python27\python27_d.dll build\Debug\
 copy deps\libRocket\lib\RocketCore_d.dll build\Debug
 copy deps\libRocket\lib\RocketDebugger_d.dll build\Debug
 copy deps\libRocket\lib\RocketControls_d.dll build\Debug
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Widgetsd.dll build\Debug
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Guid.dll build\Debug
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Cored.dll build\Debug
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\icudt53.dll build\Debug
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\icuin53.dll build\Debug
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\icuuc53.dll build\Debug
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\Qt5Widgetsd.dll build\Debug
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\Qt5Guid.dll build\Debug
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\Qt5Cored.dll build\Debug
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\icudt53.dll build\Debug
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\icuin53.dll build\Debug
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\icuuc53.dll build\Debug
 
 
 
@@ -48,12 +48,12 @@ copy deps\Python27\python27.dll build\Release
 copy deps\libRocket\lib\RocketCore.dll build\Release
 copy deps\libRocket\lib\RocketDebugger.dll build\Release
 copy deps\libRocket\lib\RocketControls.dll build\Release
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Widgets.dll build\Release
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Gui.dll build\Release
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Core.dll build\Release
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\icudt53.dll build\Release
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\icuin53.dll build\Release
-copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\icuuc53.dll build\Release
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\Qt5Widgets.dll build\Release
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\Qt5Gui.dll build\Release
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\Qt5Core.dll build\Release
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\icudt53.dll build\Release
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\icuin53.dll build\Release
+copy Qt\Qt5.4.1\5.4\msvc2013_opengl\bin\icuuc53.dll build\Release
 
 copy deps\libRocket\lib\*.pyd build\
 copy deps\libRocket\lib\rocket.py build\
@@ -78,7 +78,7 @@ cd ..\deps\SDL2_mixer-2.0.0
 set SDL2MIXERDIR=%CD%
 cd %CURRDIR%
 
-cd ..\deps\boost_1_54_0
+cd ..\deps\boost_1_58_0
 set BOOST_ROOT=%CD%
 cd %CURRDIR%
 
@@ -100,11 +100,11 @@ cd ..\windows-include\
 set WIN_INCLUDE=%CD%
 cd %CURRDIR%
 
-cd ..\Qt\Qt5.4.1\5.4\msvc2010_opengl
+cd ..\Qt\Qt5.4.1\5.4\msvc2013_opengl
 set CMAKE_PREFIX_PATH=%CD%
 cd %CURRDIR%
 
-cmake.exe  -G "Visual Studio 10" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DBoost_USE_STATIC_LIBS=On
+cmake.exe  -G "Visual Studio 13" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DBoost_USE_STATIC_LIBS=On
 
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
