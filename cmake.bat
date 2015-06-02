@@ -25,6 +25,7 @@ mkdir build\Debug
 copy deps\SDL2-2.0.3\lib\SDL2.dll build\Debug\
 copy deps\SDL2_image-2.0.0\lib\*.dll build\Debug\
 copy deps\SDL2_mixer-2.0.0\lib\*.dll build\Debug\
+copy deps\freetype-2.3.5-1\bin\freetype.dll build\Debug\
 copy deps\freetype-2.3.5-1\bin\freetype6.dll build\Debug\
 copy deps\Python27\python27_d.dll build\Debug\
 copy deps\libRocket\lib\RocketCore_d.dll build\Debug
@@ -43,6 +44,7 @@ mkdir build\Release
 copy deps\SDL2-2.0.3\lib\SDL2.dll build\Release\
 copy deps\SDL2_image-2.0.0\lib\*.dll build\Release\
 copy deps\SDL2_mixer-2.0.0\lib\*.dll build\Release\
+copy deps\freetype-2.3.5-1\bin\freetype.dll build\Release\
 copy deps\freetype-2.3.5-1\bin\freetype6.dll build\Release\
 copy deps\Python27\python27.dll build\Release
 copy deps\libRocket\lib\RocketCore.dll build\Release
@@ -104,7 +106,7 @@ cd ..\Qt\Qt5.4.1\5.4\msvc2013_opengl
 set CMAKE_PREFIX_PATH=%CD%
 cd %CURRDIR%
 
-cmake.exe  -G "Visual Studio 13" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DBoost_USE_STATIC_LIBS=On
+cmake.exe  -G "Visual Studio 12" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DBoost_USE_STATIC_LIBS=On
 
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
