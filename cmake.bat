@@ -30,6 +30,7 @@ copy deps\Python27\python27_d.dll build\Debug\
 copy deps\libRocket\lib\RocketCore_d.dll build\Debug
 copy deps\libRocket\lib\RocketDebugger_d.dll build\Debug
 copy deps\libRocket\lib\RocketControls_d.dll build\Debug
+copy deps\libpng\lib\*.dll build\Debug
 copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Widgetsd.dll build\Debug
 copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Guid.dll build\Debug
 copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Cored.dll build\Debug
@@ -48,6 +49,7 @@ copy deps\Python27\python27.dll build\Release
 copy deps\libRocket\lib\RocketCore.dll build\Release
 copy deps\libRocket\lib\RocketDebugger.dll build\Release
 copy deps\libRocket\lib\RocketControls.dll build\Release
+copy deps\libpng\lib\*.dll build\Release
 copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Widgets.dll build\Release
 copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Gui.dll build\Release
 copy Qt\Qt5.4.1\5.4\msvc2010_opengl\bin\Qt5Core.dll build\Release
@@ -65,6 +67,16 @@ mklink /j build\Python27 deps\Python27
 
 cd build
 set CURRDIR=%CD%
+
+cd ..\deps\zlib
+set ZLIB_LIBRARY=%CD%\lib\zlib.lib
+set ZLIB_INCLUDE_DIR=%CD%\include
+cd %CURRDIR%
+
+cd ..\deps\libpng
+set PNG_LIBRARY=%CD%\lib\libpng.lib
+set PNG_INCLUDE_DIR=%CD%\include
+cd %CURRDIR%
 
 cd ..\deps\SDL2-2.0.3
 set SDL2DIR=%CD%
@@ -96,6 +108,9 @@ set PYTHON_LIBRARY=%CD%\libs\python27.lib
 set PYTHON_DEBUG_LIBRARY=%CD%\libs\python27_d.lib
 cd %CURRDIR%
 
+
+
+
 cd ..\windows-include\
 set WIN_INCLUDE=%CD%
 cd %CURRDIR%
@@ -104,7 +119,7 @@ cd ..\Qt\Qt5.4.1\5.4\msvc2010_opengl
 set CMAKE_PREFIX_PATH=%CD%
 cd %CURRDIR%
 
-cmake.exe  -G "Visual Studio 10" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DBoost_USE_STATIC_LIBS=On
+cmake.exe  -G "Visual Studio 10" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DZLIB_LIBRARY=%ZLIB_LIBRARY% -DZLIB_INCLUDE_DIR=%ZLIB_INCLUDE_DIR% -DPNG_LIBRARY=%PNG_LIBRARY% -DPNG_PNG_INCLUDE_DIR=%PNG_INCLUDE_DIR% -DBoost_USE_STATIC_LIBS=On
 
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
