@@ -189,7 +189,7 @@ class BaseHTTPServerTestCase(BaseTestCase):
 
     def test_request_line_trimming(self):
         self.con._http_vsn_str = 'HTTP/1.1\n'
-        self.con.putrequest('GET', '/')
+        self.con.putrequest('XYZBOGUS', '/')
         self.con.endheaders()
         res = self.con.getresponse()
         self.assertEqual(res.status, 501)
@@ -216,8 +216,9 @@ class BaseHTTPServerTestCase(BaseTestCase):
         self.assertEqual(res.status, 501)
 
     def test_version_none(self):
+        # Test that a valid method is rejected when not HTTP/1.x
         self.con._http_vsn_str = ''
-        self.con.putrequest('PUT', '/')
+        self.con.putrequest('CUSTOM', '/')
         self.con.endheaders()
         res = self.con.getresponse()
         self.assertEqual(res.status, 400)
@@ -320,6 +321,12 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         self.check_status_and_reason(response, 200)
         response = self.request(self.tempdir_name)
         self.check_status_and_reason(response, 301)
+        response = self.request(self.tempdir_name + '/?hi=2')
+        self.check_status_and_reason(response, 200)
+        response = self.request(self.tempdir_name + '?hi=1')
+        self.check_status_and_reason(response, 301)
+        self.assertEqual(response.getheader("Location"),
+                         self.tempdir_name + "/?hi=1")
         response = self.request('/ThisDoesNotExist')
         self.check_status_and_reason(response, 404)
         response = self.request('/' + 'ThisDoesNotExist' + '/')
@@ -348,7 +355,7 @@ class SimpleHTTPServerTestCase(BaseTestCase):
         response = self.request('/', method='FOO')
         self.check_status_and_reason(response, 501)
         # requests must be case sensitive,so this should fail too
-        response = self.request('/', method='get')
+        response = self.request('/', method='custom')
         self.check_status_and_reason(response, 501)
         response = self.request('/', method='GETs')
         self.check_status_and_reason(response, 501)
@@ -385,7 +392,9 @@ class CGIHTTPServerTestCase(BaseTestCase):
         BaseTestCase.setUp(self)
         self.parent_dir = tempfile.mkdtemp()
         self.cgi_dir = os.path.join(self.parent_dir, 'cgi-bin')
+        self.cgi_child_dir = os.path.join(self.cgi_dir, 'child-dir')
         os.mkdir(self.cgi_dir)
+        os.mkdir(self.cgi_child_dir)
 
         # The shebang line should be pure ASCII: use symlink if possible.
         # See issue #7668.
@@ -410,6 +419,11 @@ class CGIHTTPServerTestCase(BaseTestCase):
             file2.write(cgi_file2 % self.pythonexe)
         os.chmod(self.file2_path, 0777)
 
+        self.file3_path = os.path.join(self.cgi_child_dir, 'file3.py')
+        with open(self.file3_path, 'w') as file3:
+            file3.write(cgi_file1 % self.pythonexe)
+        os.chmod(self.file3_path, 0777)
+
         self.cwd = os.getcwd()
         os.chdir(self.parent_dir)
 
@@ -421,6 +435,8 @@ class CGIHTTPServerTestCase(BaseTestCase):
             os.remove(self.nocgi_path)
             os.remove(self.file1_path)
             os.remove(self.file2_path)
+            os.remove(self.file3_path)
+            os.rmdir(self.cgi_child_dir)
             os.rmdir(self.cgi_dir)
             os.rmdir(self.parent_dir)
         finally:
@@ -509,6 +525,16 @@ class CGIHTTPServerTestCase(BaseTestCase):
         self.assertEqual((b'Hello World\n', 'text/html', 200),
                 (res.read(), res.getheader('Content-type'), res.status))
         self.assertEqual(os.environ['SERVER_SOFTWARE'], signature)
+
+    def test_urlquote_decoding_in_cgi_check(self):
+        res = self.request('/cgi-bin%2ffile1.py')
+        self.assertEqual((b'Hello World\n', 'text/html', 200),
+                (res.read(), res.getheader('Content-type'), res.status))
+
+    def test_nested_cgi_path_issue21323(self):
+        res = self.request('/cgi-bin/child-dir/file3.py')
+        self.assertEqual((b'Hello World\n', 'text/html', 200),
+                (res.read(), res.getheader('Content-type'), res.status))
 
 
 class SimpleHTTPRequestHandlerTestCase(unittest.TestCase):

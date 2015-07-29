@@ -194,6 +194,18 @@ class PosixTester(unittest.TestCase):
         self.fdopen_helper('r')
         self.fdopen_helper('r', 100)
 
+    @unittest.skipUnless(hasattr(posix, 'fdopen'),
+                         'test needs posix.fdopen()')
+    def test_fdopen_directory(self):
+        try:
+            fd = os.open('.', os.O_RDONLY)
+        except OSError as e:
+            self.assertEqual(e.errno, errno.EACCES)
+            self.skipTest("system cannot open directories")
+        with self.assertRaises(IOError) as cm:
+            os.fdopen(fd, 'r')
+        self.assertEqual(cm.exception.errno, errno.EISDIR)
+
     @unittest.skipUnless(hasattr(posix, 'fdopen') and
                          not sys.platform.startswith("sunos"),
                          'test needs posix.fdopen()')
@@ -248,6 +260,40 @@ class PosixTester(unittest.TestCase):
                          'test needs posix.stat()')
     def test_stat(self):
         self.assertTrue(posix.stat(test_support.TESTFN))
+
+    @unittest.skipUnless(hasattr(posix, 'stat'), 'test needs posix.stat()')
+    @unittest.skipUnless(hasattr(posix, 'makedev'), 'test needs posix.makedev()')
+    def test_makedev(self):
+        st = posix.stat(test_support.TESTFN)
+        dev = st.st_dev
+        self.assertIsInstance(dev, (int, long))
+        self.assertGreaterEqual(dev, 0)
+
+        major = posix.major(dev)
+        self.assertIsInstance(major, (int, long))
+        self.assertGreaterEqual(major, 0)
+        self.assertEqual(posix.major(int(dev)), major)
+        self.assertEqual(posix.major(long(dev)), major)
+        self.assertRaises(TypeError, posix.major, float(dev))
+        self.assertRaises(TypeError, posix.major)
+        self.assertRaises((ValueError, OverflowError), posix.major, -1)
+
+        minor = posix.minor(dev)
+        self.assertIsInstance(minor, (int, long))
+        self.assertGreaterEqual(minor, 0)
+        self.assertEqual(posix.minor(int(dev)), minor)
+        self.assertEqual(posix.minor(long(dev)), minor)
+        self.assertRaises(TypeError, posix.minor, float(dev))
+        self.assertRaises(TypeError, posix.minor)
+        self.assertRaises((ValueError, OverflowError), posix.minor, -1)
+
+        self.assertEqual(posix.makedev(major, minor), dev)
+        self.assertEqual(posix.makedev(int(major), int(minor)), dev)
+        self.assertEqual(posix.makedev(long(major), long(minor)), dev)
+        self.assertRaises(TypeError, posix.makedev, float(major), minor)
+        self.assertRaises(TypeError, posix.makedev, major, float(minor))
+        self.assertRaises(TypeError, posix.makedev, major)
+        self.assertRaises(TypeError, posix.makedev)
 
     def _test_all_chown_common(self, chown_func, first_param, stat_func):
         """Common code for chown, fchown and lchown tests."""
@@ -509,7 +555,7 @@ class PosixTester(unittest.TestCase):
 
     @unittest.skipUnless(hasattr(os, 'getegid'), "test needs os.getegid()")
     def test_getgroups(self):
-        with os.popen('id -G') as idg:
+        with os.popen('id -G 2>/dev/null') as idg:
             groups = idg.read().strip()
             ret = idg.close()
 
@@ -520,7 +566,7 @@ class PosixTester(unittest.TestCase):
         if sys.platform == 'darwin':
             import sysconfig
             dt = sysconfig.get_config_var('MACOSX_DEPLOYMENT_TARGET') or '10.0'
-            if float(dt) < 10.6:
+            if tuple(int(n) for n in dt.split('.')[0:2]) < (10, 6):
                 raise unittest.SkipTest("getgroups(2) is broken prior to 10.6")
 
         # 'id -G' and 'os.getgroups()' should return the same
