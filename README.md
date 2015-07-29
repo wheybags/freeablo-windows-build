@@ -15,7 +15,7 @@ Requirements
 cmake - get the windows installer from here: http://www.cmake.org/cmake/resources/software.html
 Make sure to tell the installer to add cmake to PATH (either for current user or all users), it will ask you about this on the second page.
 
-Visual studio 2013 - needs to be 2013. The free version shoudl work fine.
+Visual studio 2013 - needs to be 2013. The free version should work fine.
 
 Usage
 =====
