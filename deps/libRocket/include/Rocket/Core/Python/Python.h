@@ -32,7 +32,7 @@
 #include "../Platform.h"
 
 // Python header includes
-#include <Python.h>
+#include <boost/python/detail/wrap_python.hpp>
 
 #ifdef ROCKET_PLATFORM_WIN32
 	#pragma warning(push)
