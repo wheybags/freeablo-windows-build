@@ -3,7 +3,7 @@
 :http://stackoverflow.com/questions/3551888/pausing-a-batch-file-when-double-clicked-but-not-when-run-from-a-console-window
 for %%x in (%cmdcmdline%) do if /i "%%~x"=="/c" set DOUBLECLICKED=1
 
-
+IF DEFINED APPVEYOR GOTO QTINSTALLED
 IF EXIST Qt GOTO QTINSTALLED
     echo downloading qt, this may take a while (~700mb installer)...
     powershell -Command "(New-Object Net.WebClient).DownloadFile('http://download.qt.io/official_releases/qt/5.6/5.6.0/qt-opensource-windows-x86-msvc2015-5.6.0.exe', 'qt-opensource-windows-x86-msvc2015-5.6.0.exe')"
