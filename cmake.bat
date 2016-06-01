@@ -18,6 +18,20 @@ IF NOT EXIST build\ GOTO NOBUILDFOLDER
     rmdir /s /q build\
 :NOBUILDFOLDER
 
+set CURRDIR=%CD%
+if defined APPVEYOR goto appveyor_qt
+    cd Qt\Qt5.6.0\5.6\msvc2015
+    set QTDIR=%CD%
+goto qtdone
+:appveyor_qt
+    cd C:\Qt\5.6\msvc2015
+    set QTDIR=%CD%
+:qtdone
+
+cd %CURRDIR%
+
+
+
 
 mkdir build
 
@@ -34,12 +48,12 @@ copy deps\libRocket\lib\RocketControls_d.dll build\Debug\RocketControls.dll
 copy deps\libRocket\lib\_rocketcore_d.pyd build\Debug\_rocketcore.pyd
 copy deps\libRocket\lib\_rocketcontrols_d.pyd build\Debug\_rocketcontrols.pyd
 copy deps\libpng\lib\*.dll build\Debug
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\Qt5Widgetsd.dll build\Debug
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\Qt5Guid.dll build\Debug
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\Qt5Cored.dll build\Debug
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\icudt54.dll build\Debug
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\icuin54.dll build\Debug
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\icuuc54.dll build\Debug
+copy %QTDIR%\bin\Qt5Widgetsd.dll build\Debug
+copy %QTDIR%\bin\Qt5Guid.dll build\Debug
+copy %QTDIR%\bin\Qt5Cored.dll build\Debug
+copy %QTDIR%\bin\icudt54.dll build\Debug
+copy %QTDIR%\bin\icuin54.dll build\Debug
+copy %QTDIR%\bin\icuuc54.dll build\Debug
 copy deps\boost_1_61_0\lib\*-mt-gd-1_61.dll build\Debug
 
 
@@ -57,12 +71,12 @@ copy deps\libRocket\lib\RocketControls.dll build\Release
 copy deps\libRocket\lib\_rocketcore.pyd build\Release\_rocketcore.pyd
 copy deps\libRocket\lib\_rocketcontrols.pyd build\Release\_rocketcontrols.pyd
 copy deps\libpng\lib\*.dll build\Release
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\Qt5Widgets.dll build\Release
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\Qt5Gui.dll build\Release
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\Qt5Core.dll build\Release
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\icudt54.dll build\Release
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\icuin54.dll build\Release
-copy Qt\Qt5.6.0\5.6\msvc2015\bin\icuuc54.dll build\Release
+copy %QTDIR%\bin\Qt5Widgets.dll build\Release
+copy %QTDIR%\bin\Qt5Gui.dll build\Release
+copy %QTDIR%\bin\Qt5Core.dll build\Release
+copy %QTDIR%\bin\icudt54.dll build\Release
+copy %QTDIR%\bin\icuin54.dll build\Release
+copy %QTDIR%\bin\icuuc54.dll build\Release
 copy deps\boost_1_61_0\lib\*-mt-1_61.dll build\Release
 
 mkdir build\RelWithDebInfo
@@ -128,9 +142,7 @@ cd ..\windows-include\
 set WIN_INCLUDE=%CD%
 cd %CURRDIR%
 
-cd ..\Qt\Qt5.6.0\5.6\msvc2015
-set CMAKE_PREFIX_PATH=%CD%
-cd %CURRDIR%
+set CMAKE_PREFIX_PATH=%QTDIR%
 
 cmake.exe  -G "Visual Studio 14" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DZLIB_LIBRARY=%ZLIB_LIBRARY% -DZLIB_INCLUDE_DIR=%ZLIB_INCLUDE_DIR% -DPNG_LIBRARY=%PNG_LIBRARY% -DPNG_PNG_INCLUDE_DIR=%PNG_INCLUDE_DIR% -DCLI_DEFINES=-DBOOST_ALL_DYN_LINK
 
@@ -138,4 +150,7 @@ cmake.exe  -G "Visual Studio 14" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -D
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
 cd ..
 
+if defined APPVEYOR goto finished
 if defined DOUBLECLICKED pause
+
+:finished
