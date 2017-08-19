@@ -7,11 +7,11 @@ IF DEFINED APPVEYOR GOTO QTINSTALLED
 IF EXIST Qt GOTO QTINSTALLED
     echo downloading qt, this may take a while (~700mb installer)...
     powershell -Command "(New-Object Net.WebClient).DownloadFile('http://download.qt.io/official_releases/qt/5.6/5.6.0/qt-opensource-windows-x86-msvc2015-5.6.0.exe', 'qt-opensource-windows-x86-msvc2015-5.6.0.exe')"
-       
+
     echo executing qt installer, please select %CD%\Qt\Qt5.6.0\ as the installation directory
     pause
     start /WAIT qt-opensource-windows-x86-msvc2015-5.6.0.exe
-    
+
 :QTINSTALLED
 
 IF NOT EXIST build\ GOTO NOBUILDFOLDER
@@ -142,7 +142,7 @@ cd ..\windows-include\
 set WIN_INCLUDE=%CD%
 cd %CURRDIR%
 
-cmake.exe -DCMAKE_PREFIX_PATH=%QTDIR% -G "Visual Studio 14" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DZLIB_LIBRARY=%ZLIB_LIBRARY% -DZLIB_INCLUDE_DIR=%ZLIB_INCLUDE_DIR% -DPNG_LIBRARY=%PNG_LIBRARY% -DPNG_PNG_INCLUDE_DIR=%PNG_INCLUDE_DIR% -DCLI_DEFINES=-DBOOST_ALL_DYN_LINK
+cmake.exe %* -DCMAKE_PREFIX_PATH=%QTDIR% -G "Visual Studio 14" ..\freeablo -DCLI_INCLUDE_DIRS=%WIN_INCLUDE% -DPYTHON_INCLUDE_DIR=%PYTHON_INCLUDE_DIR% -DPYTHON_LIBRARY=%PYTHON_LIBRARY% -DPYTHON_DEBUG_LIBRARY=%PYTHON_DEBUG_LIBRARY% -DZLIB_LIBRARY=%ZLIB_LIBRARY% -DZLIB_INCLUDE_DIR=%ZLIB_INCLUDE_DIR% -DPNG_LIBRARY=%PNG_LIBRARY% -DPNG_PNG_INCLUDE_DIR=%PNG_INCLUDE_DIR% -DCLI_DEFINES=-DBOOST_ALL_DYN_LINK
 
 
 for /f "usebackq delims=|" %%f in (`dir /s/b *.vcxproj`) do echo f | xcopy ..\template.vcxproj.user %%~dpnf.vcxproj.user
