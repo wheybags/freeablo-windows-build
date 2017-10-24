@@ -1,4 +1,6 @@
-freeablo-windows-build
+# No longer used, freeablo dependencies are now managed with [hunter](https://github.com/ruslo/hunter)
+
+~~freeablo-windows-build~~
 =======================
 
 This repository is for people who want to build https://github.com/wheybags/freeablo on windows.
